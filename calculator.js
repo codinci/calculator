@@ -27,14 +27,14 @@ class Calculator {
   appendNumber(number) {
     if (number === '.' && this.currentOperand.includes('.')) return
     this.currentOperand = this.currentOperand.toString() + number.toString()
-
   }
 
-  chooseOperation(operation) {
+  chooseOperation(operation) {    
     if (this.currentOperand === '') return
     if (this.previousOperand !== '') {
       this.compute()
-    }
+    }  
+    
     this.operation = operation
     this.previousOperand = this.currentOperand
     this.currentOperand = ''
@@ -51,22 +51,25 @@ class Calculator {
         result = prev + current         
         break
       case '-':
-          result = prev - current
-          break
-      case '-':
-          result = prev - current
-          break
+        result = prev - current
+        break
       case 'X':
-          result = prev * current
-          break
-      case '/':
+        result = prev * current
+        break
+      case '÷':
+        if( current == '0'){
+          console.log('division by zero')
+          result = 0
+        } else {
+          console.log('division possible')
           result = prev / current
-          break
+        }       
+        break
       case '%':
-          result = prev % current
-          break 
+        result = prev % current
+        break 
       default:
-          return
+        return
     }
 
     this.currentOperand = result
@@ -74,7 +77,9 @@ class Calculator {
     this.previousOperand = ''
   }
 
-  getDisplayNumber(number){
+ 
+
+  getDisplayNumber(number) {
     const stringNumber = number.toString()
     const integerDigits = parseFloat(stringNumber.split('.')[0])
     const decimalDigits = stringNumber.split('.')[1]
@@ -134,3 +139,8 @@ deleteButton.addEventListener('click', button => {
   calculator.updateDisplay()
 })
 
+
+TODO :Numbers divided by zero should produce a 'null' result
+      Negative numbers should be able to be calculated 
+      Round off numbers to 4 decimal places  
+      Calculation of percentages  
