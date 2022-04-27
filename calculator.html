@@ -4,39 +4,46 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <link rel="stylesheet" href="./style.css">
     <script src="./calculator.js" defer></script>
     <title>Calculator</title>
 </head>
 <body>
-    <div class="calculator-grid">
-        <div class="output-display">
+    <main class="calculator-container">
+        <header class="header">
+            <h1>Calculator</h1>
+        </header>
+        <section class="display">
             <div data-previous-operand class="previous-operand"></div>
-            <div data-current-operand class="current-operand"></div>
-        </div>
-        <div class="controls">
-            <button data-clear-all class="symbols">AC</button>
-            <button data-delete class="symbols">DEL</button>
-            <button data-operation class="symbols">+</button>
-            <button data-operation class="symbols">%</button>
-            <button data-number >7</button>
-            <button data-number >8</button>
-            <button data-number >9</button>
-            <button data-operation class="symbols">-</button>
-            <button data-number >4</button>
-            <button data-number >5</button>
-            <button data-number >6</button>
-            <button data-operation class="symbols">X</button>
-            <button data-number >1</button>
-            <button data-number >2</button>
-            <button data-number >3</button>
-            <button data-operation class="symbols">÷</button>
-            <button data-number class="symbols">.</button>
-            <button data-number >0</button>
-            <button data-reverse-numbers class="symbols">⮌</button>
-            <button data-equals class="symbols">=</button>
-        </div>
-    </div>
+            <input type="text" data-current-operand class="current-operand" value="0" readonly></div>
+        </section>
+
+        <button data-clear-all class="symbols">AC</button>
+        <button data-delete class="symbols">DEL</button>
+        <button data-operation class="symbols">+</button>
+        <button data-operation class="symbols">%</button>
+
+        <button data-number >7</button>
+        <button data-number >8</button>
+        <button data-number >9</button>
+        <button data-operation class="symbols">-</button>
+
+        <button data-number >4</button>
+        <button data-number >5</button>
+        <button data-number >6</button>
+        <button data-operation class="symbols">X</button>
+
+        <button data-number >1</button>
+        <button data-number >2</button>
+        <button data-number >3</button>
+        <button data-operation class="symbols">÷</button>
+
+        <button data-number class="symbols">.</button>
+        <button data-number >0</button>
+        <button data-negate-numbers class="symbols">+/-</button>
+        <button data-equals class="symbols">=</button>
+    </main>
     
 </body>
 </html>

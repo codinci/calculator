@@ -1,82 +1,115 @@
-*, *::before, *::after {
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
     box-sizing: border-box;
 }
 
+html {
+    font-size: 16px;
+    font-family: "Roboto Mono", monospace;
+    color: #000;
+}
+
 body {
-    padding: 0;
-    margin: 0;
+    width: 100vw;
+    height: 100vh;
     background: linear-gradient(to right, #00AAFF, #00FF6C);
-}
-
-.calculator-grid {
-    background-color: #101010;
-    width: 25em;
-    margin: 5em auto;
-}
-
-.output-display {
-    grid-column: 1 / -1;
-    background-color: #222222;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-around;
-    flex-direction: column;
-    word-wrap: break-word;
-    word-break: break-all; 
-    padding: 30px;
-}
-
-.output-display .previous-operand {
-    color: rgba(255, 255, 255, .75);
-    font-size: 1.5rem;
-}
-
-.output-display .current-operand {
-    color: white;
-    font-size: 2.5rem;
-}
-
-.controls {
     display: grid;
-    justify-content: center;
+    place-content: center;
+}
+
+.calculator-container {
+    background-color: #cecece;
+    width: 90vw;
+    max-width: 500px;
+    margin: 5em auto;
+    display: grid;
+    gap: 1px;
+    grid-template-areas: 
+        "header header header header"
+        "display display display display";
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: 20px minmax(120px, auto) repeat(5, minmax(0, 70px));
+}
+
+.calculator-container:focus-within {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.header {
+    grid-area: header;
+    margin-top: 28px;
+    padding: 0.25rem 0.9rem;
+    display: flex;
     align-items: center;
-    grid-template-columns: repeat(4, 1fr);
-    padding: 0.7em 0;
-    margin: auto 0.5em;
+}
+ 
+.header h1 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 0.85rem;
+    font-weight: normal;
 }
 
-.controls button {
-    background: #222222;
-    color: #ffffff;
-    height: 5.5em;
-    cursor: pointer;
-    margin: 0.5em;
-    padding: unset;
-    border-radius: 0.5em;
-    outline: unset;    
+.display {
+    grid-area: display;
+    padding: 3px 5px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 }
 
-.controls button:hover {
-    background: #333333;
+.previous-operand {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 1rem;
 }
 
-.controls button:active {
-    transform: translateY(0.5em);
+.current-operand {
+    font-size: 3rem;
+    font-weight: bolder;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    text-align: right;
+    font-family: "Roboto Mono",monospace;
 }
 
-.controls .symbols {
-    background: #005755;
+button {
+    display: grid;
+    place-content: center;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    background-color: whitesmoke;
+    border: none;
+    outline: none;
 }
 
-.controls .symbols:hover {
-    background: #006664;
+button:hover,
+button:active {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
-@media screen and (max-width: 768px) {
-    .calculator {
+.symbols {
+    background-color: rgb(235, 235, 235);
+}
+
+@media screen and (min-width:768px) {
+    html {
+        font-size: 22px;
+    }
+    .calculator-container {
+        grid-template-rows:  35px minmax(95px, auto) repeat(5, minmax(0, 95px));
+    }
+    
+}
+
+/* @media screen and (max-width: 768px) {
+    .calculator-container {
         width: 100vw;
         height: 100vh;
         margin: auto;
     }
-
-}
+} */

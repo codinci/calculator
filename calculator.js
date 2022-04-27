@@ -140,7 +140,7 @@ deleteButton.addEventListener('click', button => {
 })
 
 
-TODO :Numbers divided by zero should produce a 'null' result
-      Negative numbers should be able to be calculated 
-      Round off numbers to 4 decimal places  
-      Calculation of percentages  
+// TODO :Numbers divided by zero should produce a 'null' result
+//       Negative numbers should be able to be calculated 
+//       Round off numbers to 4 decimal places  
+//       Calculation of percentages  
