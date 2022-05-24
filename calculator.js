@@ -3,141 +3,62 @@ const operationButtons = document.querySelectorAll('[data-operation]')
 const equalsButton = document.querySelector('[data-equals]')
 const allClearButton = document.querySelector('[data-clear-all]')
 const deleteButton = document.querySelector('[data-delete]')
-const previousOperandTextElement = document.querySelector('[data-previous-operand]')
-const currentOperandTextElement = document.querySelector('[data-current-operand]')
+const previousOperandElement = document.querySelector('[data-previous-operand]')
+const currentOperandElement = document.querySelector('[data-current-operand]')
 
 
 class Calculator {
-  constructor(previousOperandTextElement, currentOperandTextElement){
-    this.previousOperandTextElement = previousOperandTextElement
-    this.currentOperandTextElement = currentOperandTextElement
-    this.clear()
+  constructor(previousOperandElement, currentOperandElement) {
+    this.previousOperandElement = previousOperandElement;
+    this.currentOperandElement = currentOperandElement;
+    this.itemArray = [];
+    this.equationArray = [];
+    this.newNumberFlag = false;
   }
 
-  clear() {
-    this.currentOperand = ''
-    this.previousOperand = ''
-    this.operation = undefined
+  // clear function to clear everything on the screen initializing a value of '0'
+  clear() {    
+    this.currentOperandElement.innerText = '0';
+    this.previousOperandElement = '';
+    this.operator = null;
   }
 
-  delete() {
-    this.currentOperand = this.currentOperand.toString().slice(0,-1)
-  }
-
+  // appendNumber function to accept values inputted by the user
   appendNumber(number) {
-    if (number === '.' && this.currentOperand.includes('.')) return
-    this.currentOperand = this.currentOperand.toString() + number.toString()
-  }
-
-  chooseOperation(operation) {    
-    if (this.currentOperand === '') return
-    if (this.previousOperand !== '') {
-      this.compute()
-    }  
     
-    this.operation = operation
-    this.previousOperand = this.currentOperand
-    this.currentOperand = ''
-
-  }
-
-  compute () {
-    let result
-    const prev = parseFloat(this.previousOperand)
-    const current = parseFloat(this.currentOperand)
-    if(isNaN(prev) || isNaN(current)) return
-    switch(this.operation) {
-      case '+':
-        result = prev + current         
-        break
-      case '-':
-        result = prev - current
-        break
-      case 'X':
-        result = prev * current
-        break
-      case '÷':
-        if( current == '0'){
-          console.log('division by zero')
-          result = 0
-        } else {
-          console.log('division possible')
-          result = prev / current
-        }       
-        break
-      case '%':
-        result = prev % current
-        break 
-      default:
-        return
+    if(this.currentOperandElement.innerText == '0' &&
+       this.currentOperandElement.innerText.length == 1)
+    {
+      this.currentOperandElement.innerText = number;
+    } 
+    else 
+    {
+      this.currentOperandElement.innerText += number;
     }
-
-    this.currentOperand = result
-    this.operation = undefined
-    this.previousOperand = ''
+      
+   
+    console.log(this.currentOperandElement);
   }
 
- 
-
-  getDisplayNumber(number) {
-    const stringNumber = number.toString()
-    const integerDigits = parseFloat(stringNumber.split('.')[0])
-    const decimalDigits = stringNumber.split('.')[1]
-    let integerDisplay
-    if (isNaN(integerDigits)){
-      integerDisplay = ''
-    } else {
-      integerDisplay = integerDigits.toLocaleString('en', {
-        maximumFractionDigits: 0 })
-    }
-    if (decimalDigits != null) {
-      return `${integerDisplay}.${decimalDigits}`
-    } else {
-      return integerDisplay
-    }
+  updateDisplay() {
+    
   }
 
-  updateDisplay () {
-    this.currentOperandTextElement.innerText = this.getDisplayNumber(this.currentOperand)
-    if (this.operation != null){
-      this.previousOperandTextElement.innerText =
-        `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
-    } else {
-      this.previousOperandTextElement.innerText = ''
-    }    
-  }
 }
 
-const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement)
+const calculator = new Calculator(previousOperandElement, currentOperandElement);
 
 numberButtons.forEach(button => {
   button.addEventListener('click', () => {
-    calculator.appendNumber(button.innerText)
-    calculator.updateDisplay()
-  })
-})
-
-operationButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    calculator.chooseOperation(button.innerText)
-    calculator.updateDisplay()
-  })
-})
-
-equalsButton.addEventListener('click', button => {
-  calculator.compute()
-  calculator.updateDisplay()
-})
+    console.log(button.innerText);
+    calculator.appendNumber(button.innerText);
+  });
+});
 
 allClearButton.addEventListener('click', button => {
-  calculator.clear()
-  calculator.updateDisplay()
-})
+  calculator.clear();
+});
 
-deleteButton.addEventListener('click', button => {
-  calculator.delete()
-  calculator.updateDisplay()
-})
 
 
 // TODO :Numbers divided by zero should produce a 'null' result

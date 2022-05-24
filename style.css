@@ -34,9 +34,9 @@ body {
     grid-template-rows: 20px minmax(120px, auto) repeat(5, minmax(0, 70px));
 }
 
-.calculator-container:focus-within {
+/* .calculator-container:focus-within {
     background-color: rgba(255, 255, 255, 0.5);
-}
+} */
 
 .header {
     grid-area: header;
@@ -75,6 +75,7 @@ body {
     outline: none;
     text-align: right;
     font-family: "Roboto Mono",monospace;
+    overflow-wrap: break-word;
 }
 
 button {
@@ -102,14 +103,5 @@ button:active {
     }
     .calculator-container {
         grid-template-rows:  35px minmax(95px, auto) repeat(5, minmax(0, 95px));
-    }
-    
+    }    
 }
-
-/* @media screen and (max-width: 768px) {
-    .calculator-container {
-        width: 100vw;
-        height: 100vh;
-        margin: auto;
-    }
-} */
