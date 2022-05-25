@@ -11,36 +11,48 @@ class Calculator {
   constructor(previousOperandElement, currentOperandElement) {
     this.previousOperandElement = previousOperandElement;
     this.currentOperandElement = currentOperandElement;
+    this.internationalNumberFormat = new Intl.NumberFormat('en-US')
     this.itemArray = [];
     this.equationArray = [];
     this.newNumberFlag = false;
+    this.clear();
   }
 
   // clear function to clear everything on the screen initializing a value of '0'
   clear() {    
-    this.currentOperandElement.innerText = '0';
-    this.previousOperandElement = '';
+    this.currentOperand = '0';
+    this.previousOperand = '';
     this.operator = null;
+  }
+
+  delete() { 
+    this.currentOperand = this.currentOperand.slice(0, -1);
+    if(!this.currentOperand.length) {
+      this.currentOperand = '0';
+    }
+    
   }
 
   // appendNumber function to accept values inputted by the user
   appendNumber(number) {
     
-    if(this.currentOperandElement.innerText == '0' &&
-       this.currentOperandElement.innerText.length == 1)
+    if(number === '.' && this.currentOperand.includes('.'))
     {
-      this.currentOperandElement.innerText = number;
+      return;
     } 
+    else if(this.currentOperand === '0' &&  number !== '.' ) {
+      this.currentOperand = number;
+    }
     else 
     {
-      this.currentOperandElement.innerText += number;
-    }
-      
-   
-    console.log(this.currentOperandElement);
+      this.currentOperand += number;    
+    }    
+    // console.log(this.currentOperand);        
   }
 
   updateDisplay() {
+    console.log(this.currentOperand);
+    this.currentOperandElement.innerText = this.currentOperand;
     
   }
 
@@ -50,14 +62,20 @@ const calculator = new Calculator(previousOperandElement, currentOperandElement)
 
 numberButtons.forEach(button => {
   button.addEventListener('click', () => {
-    console.log(button.innerText);
     calculator.appendNumber(button.innerText);
+    calculator.updateDisplay();
   });
 });
 
 allClearButton.addEventListener('click', button => {
   calculator.clear();
+  calculator.updateDisplay();
 });
+
+deleteButton.addEventListener('click', () => {
+  calculator.delete();
+  calculator.updateDisplay();
+})
 
 
 
