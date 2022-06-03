@@ -3,6 +3,7 @@ const operationButtons = document.querySelectorAll('[data-operation]');
 const negateButton = document.querySelector('[data-negate-number]');
 const percentageButton = document.querySelector('[data-percentage-operation]');
 const equalsButton = document.querySelector('[data-equals]');
+const decimalPointButton = document.querySelector('[data-number-point]');
 const allClearButton = document.querySelector('[data-clear-all]');
 const deleteButton = document.querySelector('[data-delete]');
 const previousOperandElement = document.querySelector('[data-previous-operand]');
@@ -13,36 +14,31 @@ class Calculator {
   constructor(previousOperandElement, currentOperandElement) {
     this.previousOperandElement = previousOperandElement;
     this.currentOperandElement = currentOperandElement;
-    this.internationalNumberFormat = new Intl.NumberFormat('en-US');
-    this.itemArray = [];
-    this.equationArray = [];
-    this.newNumberFlag = false;
-    this.currentOperand = '' ;
-    this.previousOperand = '';
-    this.operator = '';
+    this.clear();
   }
 
   // clear function to clear everything on the screen initializing a value of '0'
-  clear() {    
+  clear() {
     this.currentOperandElement.innerText = 0;
-    this.currentOperand = 0;
     this.previousOperandElement.innerText = '';
+    this.currentOperand = 0;
     this.previousOperand = '';
     this.operator = '';
     this.itemArray = [];
-    // console.log(this.previousOperand);
+    this.result = '';
+    this.equationArray = [];
+    this.newNumberFlag = false;
   }
 
-//  delete function to remove last item 
-  delete() { 
+//  delete function to remove last item
+  delete() {
     this.currentOperand = this.currentOperand.toString().slice(0, -1);
-
     if(!this.currentOperand.toString().length) {
       this.currentOperand = 0;
-    }    
+    }
   }
 
-  //negateNumber function negates the value of a number 
+  //negateNumber function negates the value of a number
   negateNumber() {
     this.currentOperand = parseFloat(this.currentOperand) * -1;
   }
@@ -54,51 +50,63 @@ class Calculator {
 
 
   // appendNumber function to accept values inputted by the user
-  appendNumber(number) {
-      
-    if(number === '.' && this.currentOperand.toString().includes('.'))
-    {
+  appendNumber(number){
+    this.previousOperandElement.innerText = '';
+    this.currentOperand += number;
+  }
+
+  //appendPoint function is used to define events after the point number is pressed
+  appendPoint(point) {
+    this.previousOperandElement.innerText = '';
+    if(point === '.' && this.currentOperand.toString().includes('.')) {
       return;
-    } 
-
-    else if(this.currentOperand == 0 &&
-            number !== '.'  && 
-            this.currentOperand.toString().length == 1)
-
-    {     
-      this.currentOperand = number;
+    } else if(this.currentOperand == '') {
+      this.currentOperand = '0' + point;
+    } else{
+      this.currentOperand += point;
     }
+  }
 
-    else 
-    {
-      this.currentOperand += number;    
-    }             
+  //equalButtonPressed function is used to define events when the equal sign button is pressed
+  equalButtonPressed(){
+    this.newNumberFlag = true;
+    this.compute();
   }
 
   //chooseOperation to take in the operator chosen by the user
-  chooseOperation(symbol) {    
+  chooseOperation(symbol) {
     if (this.currentOperand.length === ''){
       this.currentOperand = 0;
     }
-    if (this.previousOperand !== null) {
+    if(symbol == '÷' && this.currentOperandElement.innerText == 0) {
+      alert("Cannot Divide by Zero!");
+      return;
+    }
+    if (this.previousOperand !== null ) {
       this.compute();
     }
+
     this.operator = symbol;
     this.previousOperand = this.currentOperand;
     this.currentOperand = 0;
-    this.itemArray.push(this.previousOperand, symbol);
   }
 
-  add (a, b) {
-    return a + b;
+  //roundResult function is used to round up the number to 4 decimal places
+  roundResult(number) {
+    return Math.round(number * 1000) / 1000
   }
 
+  // divisionByZero() {
+  //   alert("You can not divide by zero");
+  // }
+
+//compute function for carrying out calculations based on user input
   compute() {
     let computation;
     const a = parseFloat(this.previousOperand)
     const b = parseFloat(this.currentOperand)
+    console.log(a, b);
     if (isNaN(a) || isNaN(b)) return;
-    this.itemArray.push(this.currentOperand);
     switch (this.operator) {
       case '+':
         computation = a + b;
@@ -107,29 +115,67 @@ class Calculator {
         computation = a - b;
         break;
       case '÷':
-        if(b === 0) return alert("Cannot divide by zero");
+        if(b === 0) return null;
         computation = a/b;
         break;
       case '×':
         computation = a*b;
-        break;        
+        break;
       default:
         return;
     }
-    
-    this.currentOperand = computation;
-    this.operator = '';
-    this.previousOperand = '';
+    if(!this.newNumberFlag){
+      this.currentOperand = computation;
+      this.operator = '';
+      this.previousOperand = '';
+    }else{
+      this.equalDisplay(this.previousOperand, this.operator, this.currentOperand, computation);
+    }
+    this.newNumberFlag = false;
   }
 
-  updateDisplay() {
-    console.log(this.itemArray);
-    if(this.previousOperand === ''){
-      this.currentOperandElement.innerText = `${this.currentOperand}${this.operator}`;      
+  //formatNumber is used to format the numbers to have commas
+  formatNumber(number) {
+    //convert number to string
+    const stringNumber = number.toString();
+    //defines integerDigits, numbers before the 'dot'
+    const integerDigits = parseFloat(stringNumber.split('.')[0]);
+    //defines decimalDigits, numbers after the 'dot'
+    const decimalDigits = stringNumber.split('.')[1];
+    let integerDisplay;
+
+    if (isNaN(integerDigits)) {
+      integerDisplay = '';
     } else {
-      this.previousOperandElement.innerText = `${this.previousOperand}${this.operator}`;
-      this.currentOperandElement.innerText = this.currentOperand;     
-    }     
+      integerDisplay = integerDigits.toLocaleString('en', { maximumFractionDigits: 0 });
+    }
+    if (decimalDigits != null) {
+      return `${integerDisplay}.${decimalDigits}`;
+    } else {
+      return integerDisplay;
+    }
+  }
+
+  //equalDisplay function displays what the user sees on clicking the equal sign
+  equalDisplay(num1, operation, num2, result) {
+  if(this.newNumberFlag){
+      this.previousOperandElement.innerText = `${this.formatNumber(num1)}${operation}${this.formatNumber(num2)}=`;
+      this.currentOperandElement.innerText = `${this.formatNumber(this.roundResult(result))}`;
+    } else {
+      this.currentOperand = 0;
+      this.operator = '';
+      this.previousOperand = '';
+    }
+  }
+
+  // updateDisplay function displays what the user sees
+  updateDisplay() {
+    if(this.previousOperand === ''){
+      this.currentOperandElement.innerText = `${this.formatNumber(this.currentOperand)}${this.operator}`;
+    } else {
+      this.previousOperandElement.innerText = `${this.formatNumber(this.previousOperand)}${this.operator}`;
+      this.currentOperandElement.innerText = this.formatNumber(this.currentOperand);
+    }
   }
 
 }
@@ -151,7 +197,12 @@ operationButtons.forEach(button => {
 });
 
 equalsButton.addEventListener('click', () => {
-  calculator.compute();
+  calculator.equalButtonPressed();
+  calculator.equalDisplay();
+});
+
+decimalPointButton.addEventListener('click', event => {
+  calculator.appendPoint(event.target.innerText);
   calculator.updateDisplay();
 });
 
@@ -176,7 +227,6 @@ percentageButton.addEventListener('click', () => {
 });
 
 
-
-// TODO :Round off numbers to 4 decimal places
-// TODO :Format number to have comma
-// TODO :On pressing the equal sign a new number should be inputted
+// TODO :Alert when dividing by zero
+// TODO :Allow keyboard input
+// TODO :An array of previous calculations
