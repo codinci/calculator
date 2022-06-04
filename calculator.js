@@ -1,3 +1,5 @@
+'use strict';
+
 const numberButtons = document.querySelectorAll('[data-number]');
 const operationButtons = document.querySelectorAll('[data-operation]');
 const negateButton = document.querySelector('[data-negate-number]');
@@ -15,6 +17,7 @@ class Calculator {
     this.previousOperandElement = previousOperandElement;
     this.currentOperandElement = currentOperandElement;
     this.clear();
+    
   }
 
   // clear function to clear everything on the screen initializing a value of '0'
@@ -48,6 +51,25 @@ class Calculator {
     this.currentOperand = parseFloat(this.currentOperand) / 100;
   }
 
+  //keyboardSupport function allows keyboard input events
+  keyBoardSupport(event){
+    let keyName = event.key;    
+
+    if(keyName >= 0 && keyName<= 9) this.appendNumber(keyName);
+    if(keyName === '.') this.appendPoint(keyName);
+    if(keyName === 'Escape') this.clear();
+    if(keyName === 'Delete' || keyName === 'Backspace') this.delete();
+    if(keyName === '*' || keyName === '/' || keyName === '+' || keyName === '-')
+      this.chooseOperation(this.convertKeyboardInput(keyName));
+  }
+
+  convertKeyboardInput(keyBoardOperator) {
+    if(keyBoardOperator === '*') return '×';
+    if(keyBoardOperator === '/') return '÷';
+    if(keyBoardOperator === '+') return '+';
+    if(keyBoardOperator === '-') return '-';
+  }
+
 
   // appendNumber function to accept values inputted by the user
   appendNumber(number){
@@ -66,6 +88,12 @@ class Calculator {
       this.currentOperand += point;
     }
   }
+
+  // equalKeyboardButtonPressed(){
+  //   this.newNumberFlag = true;
+  //   console.log("pressed");
+  //   this.compute();
+  // }
 
   //equalButtonPressed function is used to define events when the equal sign button is pressed
   equalButtonPressed(){
@@ -201,7 +229,7 @@ equalsButton.addEventListener('click', () => {
   calculator.equalDisplay();
 });
 
-decimalPointButton.addEventListener('click', event => {
+decimalPointButton.addEventListener('click',(event) => {
   calculator.appendPoint(event.target.innerText);
   calculator.updateDisplay();
 });
@@ -226,7 +254,23 @@ percentageButton.addEventListener('click', () => {
   calculator.updateDisplay();
 });
 
+// document.addEventListener('keydown', (event) => {
+//   const equalKey = event.key;
+//   if(equalKey === '='){
+//     calculator.equalKeyboardButtonPressed();
+//     // calculator.equalDisplay();
+//   }
+// });
+
+document.addEventListener('keydown', (event) => {
+  if(event.key === 'Enter'){
+    event.preventDefault();
+  }
+  calculator.keyBoardSupport(event);
+  calculator.updateDisplay();
+});
+
 
 // TODO :Alert when dividing by zero
-// TODO :Allow keyboard input
+// TODO :Key board support for equal button
 // TODO :An array of previous calculations
