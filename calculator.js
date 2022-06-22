@@ -89,11 +89,11 @@ class Calculator {
     }
   }
 
-  // equalKeyboardButtonPressed(){
-  //   this.newNumberFlag = true;
-  //   console.log("pressed");
-  //   this.compute();
-  // }
+  equalKeyboardButtonPressed(){
+    this.newNumberFlag = true;
+    // console.log("pressed");
+    this.compute();
+  }
 
   //equalButtonPressed function is used to define events when the equal sign button is pressed
   equalButtonPressed(){
@@ -124,10 +124,6 @@ class Calculator {
     return Math.round(number * 1000) / 1000
   }
 
-  // divisionByZero() {
-  //   alert("You can not divide by zero");
-  // }
-
 //compute function for carrying out calculations based on user input
   compute() {
     let computation;
@@ -143,11 +139,14 @@ class Calculator {
         computation = a - b;
         break;
       case '÷':
-        if(b === 0) return null;
-        computation = a/b;
+        if(b == 0) {
+          return alert('Division by zero not allowed');
+        } else {
+          computation = a / b;
+        }
         break;
       case '×':
-        computation = a*b;
+        computation = a * b;
         break;
       default:
         return;
@@ -254,23 +253,19 @@ percentageButton.addEventListener('click', () => {
   calculator.updateDisplay();
 });
 
-// document.addEventListener('keydown', (event) => {
-//   const equalKey = event.key;
-//   if(equalKey === '='){
-//     calculator.equalKeyboardButtonPressed();
-//     // calculator.equalDisplay();
-//   }
-// });
 
 document.addEventListener('keydown', (event) => {
-  if(event.key === 'Enter'){
+  if(event.key == 'Enter'){
     event.preventDefault();
+  }else if(event.key == '=') {
+    calculator.equalButtonPressed();
+    calculator.equalDisplay();
+  } else {
+    calculator.keyBoardSupport(event);
+    calculator.updateDisplay();
   }
-  calculator.keyBoardSupport(event);
-  calculator.updateDisplay();
 });
 
 
-// TODO :Alert when dividing by zero
-// TODO :Key board support for equal button
+
 // TODO :An array of previous calculations
